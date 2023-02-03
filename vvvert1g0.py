@@ -70,7 +70,7 @@ class vvvmap:
 
         self.save = self.pos
         self.keys = 0
-        self.timer = 0
+        self.timer = 0.0
         self.deaths = 0
 
     def verify(self):
@@ -177,7 +177,7 @@ class vvvmap:
                     self.pos = newpos
 
             if self.displaypos:
-                displaystr = "$ = {0}; t = {1}; X = {2}".format(self.keys, self.timer, self.deaths)
+                displaystr = "$ = {0}; t = {1:.1f}; X = {2}".format(self.keys, self.timer, self.deaths)
                 w.addstr(self.displaypos[1],self.displaypos[0],displaystr)
 
             w.addstr(self.save[1],self.save[0],'S',1)        
@@ -223,23 +223,23 @@ def checksize(w,maxyx):
 
 maplist = vvvmap.load(sys.argv[1:])
 if not maplist:
-    print "Usage: vvvert1g0.py <mapfile> [<mapfile> ...]"
+    print("Usage: vvvert1g0.py <mapfile> [<mapfile> ...]")
     sys.exit(1)
 
 maxmaxyx = (max([m.maxyx[0] for m in maplist]),max([m.maxyx[1] for m in maplist]))
 if not curses.wrapper(lambda w: checksize(w, maxmaxyx)):
-    print "To draw all these maps your window must be at least {0} by {1}.".format(*[d+1 for d in maxmaxyx])
-    print "Please resize your window and try again."
+    print("To draw all these maps your window must be at least {0} by {1}.".format(*[d+1 for d in maxmaxyx]))
+    print("Please resize your window and try again.")
     sys.exit(1)
 
 for m in maplist:
     curses.wrapper(m.start)
 
 for m in maplist:
-    print "{3} {4}: $ = {0}; t = {1}; X = {2}".format(m.keys, m.timer, m.deaths, m.filename, m.ordinal)
+    print("{3} {4}: $ = {0}; t = {1:.1f}; X = {2}".format(m.keys, m.timer, m.deaths, m.filename, m.ordinal))
 
 if (len(maplist) > 1):
     sumkeys = sum([m.keys for m in maplist])
     sumtimer = sum([m.timer for m in maplist])
     sumdeaths = sum([m.deaths for m in maplist])
-    print "{3}: $ = {0}; t = {1}; X = {2}".format(sumkeys, sumtimer, sumdeaths, "TOTAL")
+    print("{3}: $ = {0}; t = {1:.1f}; X = {2}".format(sumkeys, sumtimer, sumdeaths, "TOTAL"))
