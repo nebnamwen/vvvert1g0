@@ -83,7 +83,12 @@ class vvvmap:
 
         for y in range(len(self.maptiles)):
             for x in range(len(self.maptiles[y])):
-                w.addstr(y,x,self.maptiles[y][x],1)
+                self.drawtile(w,(x,y))
+
+    def drawtile(self,w,pos,char=None):
+        x, y = pos
+        if char is None: char = self.maptiles[y][x]
+        w.addstr(y,x,char)
 
     def start(self,w):
         while True:
@@ -101,7 +106,7 @@ class vvvmap:
                 if key == -1: break
                 else: keylist.append(key)
 
-            w.addstr(self.pos[1],self.pos[0],self.maptiles[self.pos[1]][self.pos[0]],1)
+            self.drawtile(w,self.pos)
 
             for key in keylist:
                 if key == ord('q'):
@@ -157,16 +162,16 @@ class vvvmap:
                         self.vel[2] = self.vel[1]
                 
                     if newcell == 's':
-                        w.addstr(self.save[1],self.save[0],'s',1)
+                        self.drawtile(w,self.save)
                         self.save = newpos
 
                     if newcell == '$':
                         self.maptiles[newpos[1]][newpos[0]] = ' '
-                        w.addstr(newpos[1],newpos[0],' ',1)
+                        self.drawtile(w,newpos)
                         self.keys += 1
                         for gate in self.gatepos[self.keys % 10]:
                             self.maptiles[gate[1]][gate[0]] = ' '
-                            w.addstr(gate[1],gate[0],' ',1)
+                            self.drawtile(w,gate)
 
                     if newcell == 'X':
                         dead = True
@@ -180,8 +185,8 @@ class vvvmap:
                 displaystr = "$ = {0}; t = {1:.1f}; X = {2}".format(self.keys, self.timer, self.deaths)
                 w.addstr(self.displaypos[1],self.displaypos[0],displaystr)
 
-            w.addstr(self.save[1],self.save[0],'S',1)        
-            w.addstr(self.pos[1],self.pos[0],'-AV'[self.vel[1]],1)        
+            self.drawtile(w,self.save,'S')
+            self.drawtile(w,self.pos,'-AV'[self.vel[1]])
             w.move(len(self.maptiles)-1,len(self.maptiles[-1]))
             w.refresh()
 
@@ -195,7 +200,7 @@ class vvvmap:
         
             if dead:
                 self.deaths += 1
-                w.addstr(self.pos[1],self.pos[0],self.maptiles[self.pos[1]][self.pos[0]],1)
+                w.addstr(self.pos[1],self.pos[0],self.maptiles[self.pos[1]][self.pos[0]])
                 self.pos = self.save
                 updown = 1
                 for check in (-1,1):
