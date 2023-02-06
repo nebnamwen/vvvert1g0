@@ -1,22 +1,22 @@
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 []           X========X      ||   ||   ||   ||      44 s  [] "vvvert1g0
 []  A                        || X || $ ||   || X    44    []
-[][][][]X                    ||   ||   || $ ||      []    [] "a VVVVVV demake
+[][][][]X                    ||   ||   || $ ||      []    [] "a_VVVVVV_demake
 [] E  []]X       XX          ||   || X ||   ||     []     [] "by bnewman
 []      []X     X[]X         || $ ||   || X || $  []     X[]
-[]     [][[[[]]]]][]X   s    ||   ||   ||   ||   []     XX[] "A - you upright
-[]  X[][][][][][][][[[[[[]]]]][[[[[]]]]][[[[[]]]]]     XXX[] "V - you inverted
+[]     [][[[[]]]]][]X   s    ||   ||   ||   ||   []     XX[]"_A_- you upright
+[]  X[][][][][][][][[[[[[]]]]][[[[[]]]]][[[[[]]]]]     XXX[]"_V_- you inverted
 []            []                                []    XXXX[]
-[]           []   X   X XXXXX  X   XXX   XXX   []]     XXX[] "[] - wall
-[]]]]]]]X     []  X   X   X   XX  X   X X   X   []      XX[] "X  - spike
-[]           []    X X    X    X  X   X X   X  []]X      X[] "s  - save point
-[]            []    X     X   XXX  XXX   XXX    []XX      [] "E  - exit
+[]           []   X   X XXXXX  X   XXX   XXX   []]     XXX[]"_[]_- wall
+[]]]]]]]X     []  X   X   X   XX  X   X X   X   []      XX[]"_X_ - spike
+[]           []    X X    X    X  X   X X   X  []]X      X[]"_s_ - save point
+[]            []    X     X   XXX  XXX   XXX    []XX      []"_E_ - exit
 []    X[[[[[[[]   ===========================  []]XXX     []
-[]            []    D                           []XXXX    [] "== - bouncy
-[]           []=================================[]XXX     [] "|| - bouncy
+[]            []    D                           []XXXX    []"_==_- bouncy
+[]           []=================================[]XXX     []"_||_- bouncy
 []]]]]]]    XX                     XXX          []XX      []
-[]         XX       XX         $    X      $    []X      X[] "$  - key
-[]        XX        XX                          []      XX[] "1-9 - lock
+[]         XX       XX         $    X      $    []X      X[]"_$_  - coin
+[]        XX        XX                          []      XX[]"_1-9_- lock
 []       XX             $                       []     XXX[]
 []      XX                  X            XX     []    XXXX[]
 []      77                 XXX           XX            XXX[]

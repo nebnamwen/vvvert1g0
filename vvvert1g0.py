@@ -36,6 +36,7 @@ class vvvmap:
 
     def init(self):
         self.maptiles = []
+        self.nocolor = []
         self.gatepos = [[] for i in range(10)]
         self.displaypos = None
 
@@ -47,7 +48,11 @@ class vvvmap:
         xc,yc = 0,0
         for line in self.maplines:
             self.maptiles.append([])
+            self.nocolor.append([])
+
             quote = False
+            nocolor = False
+
             for char in line:
                 if char in 'AV' and not quote:
                     self.pos = [xc,yc]
@@ -61,9 +66,23 @@ class vvvmap:
                     self.gatepos[int(char)].append((xc,yc))
                 elif char == '"':
                     quote = not quote
+                    nocolor = quote
                     char = ' '
+                elif char == '_' and quote:
+                    nocolor = not nocolor
+                    char = ' '
+                elif char == '`' and quote:
+                    nocolor = not nocolor
+                    char = "'"
+                elif char == '{' and quote:
+                    nocolor = not nocolor
+                    char = '('
+                elif char == '}' and quote:
+                    nocolor = not nocolor
+                    char = ')'
 
                 self.maptiles[yc].append(char)
+                self.nocolor[yc].append(nocolor)
 
                 xc += 1
             xc = 0
@@ -91,7 +110,7 @@ class vvvmap:
     def drawtile(self,w,pos,char=None):
         x, y = pos
         if char is None: char = self.maptiles[y][x]
-        if char in self.colors:
+        if char in self.colors and (x >= len(self.nocolor[y]) or not self.nocolor[y][x]):
             w.addstr(y,x,char,self.colors[char])
         else:
             w.addstr(y,x,char)

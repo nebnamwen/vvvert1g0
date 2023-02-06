@@ -1,6 +1,6 @@
 
-   "The letter 'A' in the box is you."
-   "The letter 'E' is the exit."
+   "The letter `A` in the box is you."
+   "The letter `E` is the exit."
 
    "Tap (don't hold) the left and right arrow keys to move."
    "You'll keep moving left or right until you press another arrow key."
@@ -22,13 +22,13 @@
     [] A    []    []
     [][][][][][][][]
 
-   "You appear as an 'A' while right-side-up,"
-      "and a 'V' while upside-down.
+   "You appear as an `A` while right-side-up,"
+      "and a `V` while upside-down.
 
    "Tap down (while standing on the ceiling) to flip back."
 --
 
-   "Don't step on the spikes (X)!"
+   "Don't step on the spikes {X}!"
 
     [][][][][][][][]
     []            []
@@ -36,10 +36,10 @@
     [][][]XXXX[][][]
 
    "After dying you respawn where you started,"
-      "or at the last 's' you touched."
+      "or at the last `s` you touched."
 --
 
-   "Collect coins ($) to open gates (represented as numbers)."
+   "Collect coins {$} to open gates (represented as numbers_1-9}."
    "The number tells you how many coins you need to open it."
 
     [][][][][][][][][]
@@ -53,7 +53,7 @@
    "Each level may or may not include the status display."
 --
 
-   "You'll automatically flip when you touch bouncy floor (==)."
+   "You'll automatically flip when you touch bouncy floor {==}."
 
    [][]============[][][]
    []     $         3E []
@@ -62,7 +62,7 @@
    [][][]============[][]
 --
 
-   "You'll also flip when you pass through a vertical bounce field (||)."
+   "You'll also flip when you pass through a vertical bounce field {||}."
 
    [][][][][][][][][][][][][]
    []      ||      ||      []
