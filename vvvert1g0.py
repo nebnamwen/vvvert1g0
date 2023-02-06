@@ -4,8 +4,9 @@ import sys
 import curses
 
 class vvvmap:
+    walltiles = "[]"
     gatetiles = "0123456789"
-    solids = "[]" + gatetiles
+    solids = walltiles + gatetiles
 
     def __init__(self, maplines):
         self.maplines = maplines
@@ -38,6 +39,8 @@ class vvvmap:
         self.gatepos = [[] for i in range(10)]
         self.displaypos = None
 
+        self.colors = {}
+
         self.pos = [0,0]
         self.vel = [0,1,1]
 
@@ -49,7 +52,7 @@ class vvvmap:
                 if char in 'AV' and not quote:
                     self.pos = [xc,yc]
                     if char == 'V':
-                        vel = [0,-1,-1]
+                        self.vel = [0,-1,-1]
                     char = 's'
                 elif char == 'D' and not quote:
                     self.displaypos = (xc,yc)
@@ -88,11 +91,41 @@ class vvvmap:
     def drawtile(self,w,pos,char=None):
         x, y = pos
         if char is None: char = self.maptiles[y][x]
-        w.addstr(y,x,char)
+        if char in self.colors:
+            w.addstr(y,x,char,self.colors[char])
+        else:
+            w.addstr(y,x,char)
+
+    def init_colors(self):
+        if curses.has_colors():
+            curses.init_pair(1,curses.COLOR_CYAN,curses.COLOR_BLACK)
+            for char in 'AV':
+                self.colors[char] = curses.color_pair(1) | curses.A_BOLD
+
+            curses.init_pair(2,curses.COLOR_BLACK,curses.COLOR_WHITE)
+            for char in self.walltiles:
+                self.colors[char] = curses.color_pair(2)
+
+            curses.init_pair(3,curses.COLOR_RED,curses.COLOR_BLACK)
+            self.colors['X'] = curses.color_pair(3) | curses.A_BOLD
+
+            curses.init_pair(4,curses.COLOR_YELLOW,curses.COLOR_BLACK)
+            self.colors['$'] = curses.color_pair(4) | curses.A_BOLD
+
+            curses.init_pair(5,curses.COLOR_BLACK,curses.COLOR_YELLOW)
+            for char in self.gatetiles:
+                self.colors[char] = curses.color_pair(5)
+
+            curses.init_pair(6,curses.COLOR_WHITE,curses.COLOR_CYAN)
+            self.colors['E'] = curses.color_pair(6) | curses.A_BOLD
+
+            for char in 'sS=|':
+                self.colors[char] = curses.A_BOLD
 
     def start(self,w):
         while True:
             self.init()
+            self.init_colors()
             self.drawmap(w)
             if self.run(w):
                 break
@@ -183,7 +216,10 @@ class vvvmap:
 
             if self.displaypos:
                 displaystr = "$ = {0}; t = {1:.1f}; X = {2}".format(self.keys, self.timer, self.deaths)
-                w.addstr(self.displaypos[1],self.displaypos[0],displaystr)
+                self.drawtile(w,self.displaypos,displaystr)
+                for char in '$X':
+                    if displaystr.find(char) >= 0:
+                        self.drawtile(w,(self.displaypos[0]+displaystr.find(char),self.displaypos[1]),char)
 
             self.drawtile(w,self.save,'S')
             self.drawtile(w,self.pos,'-AV'[self.vel[1]])
