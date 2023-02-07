@@ -245,7 +245,6 @@ class vvvmap:
                                 newpos[dimension] += p.size[dimension] * self.vel[dimension]
 
                                 newcell = self.maptiles[newpos[1]][newpos[0]]
-                                print(newcell, newpos)
 
                                 break
 
