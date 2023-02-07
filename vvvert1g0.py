@@ -2,11 +2,13 @@
 
 import sys
 import curses
+from collections import namedtuple
 
 class vvvmap:
     walltiles = "[]"
     gatetiles = "0123456789"
     solids = walltiles + gatetiles
+    portaltiles = "abc"
 
     def __init__(self, maplines):
         self.maplines = maplines
@@ -38,6 +40,7 @@ class vvvmap:
         self.maptiles = []
         self.nocolor = []
         self.gatepos = [[] for i in range(10)]
+        self.portals = { char: [] for char in self.portaltiles }
         self.displaypos = None
 
         self.colors = {}
@@ -64,10 +67,27 @@ class vvvmap:
                     char = ' '
                 elif char in self.gatetiles and not quote:
                     self.gatepos[int(char)].append((xc,yc))
+
+                elif char in self.portaltiles and not quote:
+                    existing = False
+                    for portal in self.portals[char]:
+                        if yc == portal.pos[1] and xc == portal.pos[0]+portal.size[0]:
+                            portal.size[0] += 1
+                            existing = True
+                        elif xc == portal.pos[0] and yc == portal.pos[1]+portal.size[1]:
+                            portal.size[1] += 1
+                            existing = True
+                        elif yc == portal.pos[1]+portal.size[1]-1 and xc < portal.pos[0]+portal.size[0]:
+                            existing = True
+                    if not existing:
+                        p = namedtuple("portal", ["pos", "size"])([xc,yc],[1,1])
+                        self.portals[char].append(p)
+
                 elif char == '"':
                     quote = not quote
                     nocolor = quote
                     char = ' '
+
                 elif char == '_' and quote:
                     nocolor = not nocolor
                     char = ' '
@@ -141,6 +161,15 @@ class vvvmap:
             for char in 'sS=|':
                 self.colors[char] = curses.A_BOLD
 
+            curses.init_pair(7,curses.COLOR_BLACK,curses.COLOR_MAGENTA)
+            self.colors['a'] = curses.color_pair(7)
+
+            curses.init_pair(8,curses.COLOR_BLACK,curses.COLOR_BLUE)
+            self.colors['b'] = curses.color_pair(8)
+
+            curses.init_pair(9,curses.COLOR_BLACK,curses.COLOR_GREEN)
+            self.colors['c'] = curses.color_pair(9)
+
     def start(self,w):
         while True:
             self.init()
@@ -204,10 +233,28 @@ class vvvmap:
                     newpos[dimension] += self.vel[dimension]
                     newcell = self.maptiles[newpos[1]][newpos[0]]
 
+                    while newcell in self.portaltiles:
+                        numportals = len(self.portals[newcell])
+                        for i in range(numportals):
+                            p = self.portals[newcell][i]
+                            if (newpos[0] >= p.pos[0] and newpos[0] < p.pos[0]+p.size[0]
+                                and newpos[1] >= p.pos[1] and newpos[1] < p.pos[1]+p.size[1]):
+
+                                outp = self.portals[newcell][numportals - i - 1]
+                                for d in (0,1):
+                                    newpos[d] += outp.pos[d] - p.pos[d]
+                                newpos[dimension] += p.size[dimension] * self.vel[dimension]
+
+                                newcell = self.maptiles[newpos[1]][newpos[0]]
+                                print(newcell, newpos)
+
+                                break
+
                     if newcell in self.solids:
                         newpos = self.pos
                         if dimension == 1:
                             self.vel[1] = self.vel[2]
+
                     if ((newcell == '=' and dimension == 1) or
                         (newcell == '|' and self.maptiles[self.pos[1]][self.pos[0]] == '|' and dimension == 0)):
                         self.vel[1] = -self.vel[1]
