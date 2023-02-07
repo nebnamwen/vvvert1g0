@@ -13,7 +13,6 @@ class vvvmap:
     def __init__(self, maplines):
         self.maplines = maplines
         self.init()
-        self.verify()
 
     @classmethod
     def load(cls, files):
@@ -115,8 +114,8 @@ class vvvmap:
         self.timer = 0.0
         self.deaths = 0
 
-    def verify(self):
-        pass
+    def validate(self):
+        return True
 
     def drawmap(self,w):
         curses.cbreak()
@@ -328,25 +327,36 @@ def checksize(w,maxyx):
     winmaxyx = w.getmaxyx()
     return not (winmaxyx[0] < maxyx[0] or winmaxyx[1] < maxyx[1])
 
-maplist = vvvmap.load(sys.argv[1:])
-if not maplist:
-    print("Usage: vvvert1g0.py <mapfile> [<mapfile> ...]")
-    sys.exit(1)
+def main():
+    maplist = vvvmap.load(sys.argv[1:])
+    if not maplist:
+        print("Usage: vvvert1g0.py <mapfile> [<mapfile> ...]")
+        sys.exit(1)
 
-maxmaxyx = (max([m.maxyx[0] for m in maplist]),max([m.maxyx[1] for m in maplist]))
-if not curses.wrapper(lambda w: checksize(w, maxmaxyx)):
-    print("To draw all these maps your window must be at least {0} by {1}.".format(*[d+1 for d in maxmaxyx]))
-    print("Please resize your window and try again.")
-    sys.exit(1)
+    problems = False
+    for m in maplist:
+        if not m.validate():
+            problems = True
+    if problems:
+        sys.exit(1)
 
-for m in maplist:
-    curses.wrapper(m.start)
+    winsize = curses.wrapper(lambda w: w.getmaxyx())
+    if winsize[0] < 24 or winsize[1] < 80:
+        print("vvvert1g0 is designed to run in an 80x24 terminal window.")
+        print("Please resize your window and try again.")
+        sys.exit(1)
 
-for m in maplist:
-    print("{3} {4}: $ = {0}; t = {1:.1f}; X = {2}".format(m.keys, m.timer, m.deaths, m.filename, m.ordinal))
+    for m in maplist:
+        curses.wrapper(m.start)
 
-if (len(maplist) > 1):
-    sumkeys = sum([m.keys for m in maplist])
-    sumtimer = sum([m.timer for m in maplist])
-    sumdeaths = sum([m.deaths for m in maplist])
-    print("{3}: $ = {0}; t = {1:.1f}; X = {2}".format(sumkeys, sumtimer, sumdeaths, "TOTAL"))
+    for m in maplist:
+        print("{3} {4}: $ = {0}; t = {1:.1f}; X = {2}".format(m.keys, m.timer, m.deaths, m.filename, m.ordinal))
+
+    if (len(maplist) > 1):
+        sumkeys = sum([m.keys for m in maplist])
+        sumtimer = sum([m.timer for m in maplist])
+        sumdeaths = sum([m.deaths for m in maplist])
+        print("{3}: $ = {0}; t = {1:.1f}; X = {2}".format(sumkeys, sumtimer, sumdeaths, "TOTAL"))
+
+if __name__ == "__main__":
+    main()
