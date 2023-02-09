@@ -73,6 +73,28 @@
    [][][][][]XXXXXX[][][][][]
 --
 
-   [][][][]
-   []A  E[]
-   [][][][]
+   "Portals {abc} transport you to the matching portal."
+   "When you exit a portal you come out on the opposite side."
+
+   [][][][][][]  [][][][]
+   []    a   []  []cccc[]        [][][][][][]
+   []A   a  E[]  []    [][][][]  []b       []
+   [][][][][][]  []    a    b[]  []b       []
+                 []    a    b[]  [][][]cccc[]
+                 [][][][][][][]      [][][][]
+--
+
+   "When there's only one portal of a given color,"
+   "you come out on the opposite side of the same portal."
+
+           [][][][][][][]
+           []           []
+   [][][][][]           []
+   [] V  [][]   XXXX    []
+   []    [][]   XXXX    []
+   []        aaa        []
+   []        aaa        []
+   [][][][][]   [][][][][]
+           []        []
+           []      E []
+           [][][][][][]
