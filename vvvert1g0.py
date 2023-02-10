@@ -39,7 +39,11 @@ class vvvmap:
         self.maptiles = []
         self.nocolor = []
         self.gatepos = [[] for i in range(10)]
-        self.portals = { char: [] for char in self.portaltiles }
+
+        self.portals = {}
+        for char in self.portaltiles:
+            self.portals[char] = []
+
         self.displaypos = None
 
         self.colors = {}
